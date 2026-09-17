@@ -24,6 +24,7 @@
 
 #include <cmath>
 #include <limits>
+#include <type_traits>
 
 static_assert(sizeof(vpux::type::float16) == sizeof(uint16_t), "class float16 must be exactly 2 bytes");
 

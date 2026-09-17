@@ -9,6 +9,7 @@
 #include <array>
 #include <cmath>
 #include <limits>
+#include <type_traits>
 
 static_assert(sizeof(vpux::type::float4_e2m1) == 1, "type f4e2m1 must be exactly 1 byte");
 static_assert(std::is_trivially_constructible<vpux::type::float4_e2m1, vpux::type::float4_e2m1>::value,

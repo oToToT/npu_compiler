@@ -11,6 +11,7 @@
 #include <cctype>
 #include <charconv>
 #include <cstdlib>
+#include <cerrno>
 
 #include <openvino/core/except.hpp>
 #include <openvino/runtime/properties.hpp>
@@ -96,11 +97,21 @@ uint64_t OptionParser<uint64_t>::parse(std::string_view val) {
 }
 
 double OptionParser<double>::parse(std::string_view val) {
+#if defined(_LIBCPP_VERSION)
+    char* end = nullptr;
+    errno = 0;
+    const std::string s(val);
+    const auto value = std::strtod(s.c_str(), &end);
+    if (errno == 0 && end == s.c_str() + s.size()) {
+        return value;
+    }
+#else
     double value;
     const auto result = std::from_chars(val.data(), val.data() + val.size(), value);
     if (result.ec == std::errc()) {
         return value;
     }
+#endif
     VPUX_THROW("Value '{0}' is not a valid FP64 option", val.data());
 }
 
